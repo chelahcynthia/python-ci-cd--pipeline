@@ -19,3 +19,16 @@ def create_app() -> Flask:
     register_error_handlers(app)
 
     return app
+
+def register_routes(app: Flask) -> None:
+    @app.route('/health')
+    def health_check():
+        uptime = time.time() - app.config['START_TIME']
+        return jsonify({
+            'status': 'ok',
+            'uptime': uptime,
+            'timestamp': datetime.utcnow().isoformat() + 'Z',
+            'uptime': round(uptime, 2),
+            'version': '1.0.0',
+            'environment': app.config['ENV']
+        })
